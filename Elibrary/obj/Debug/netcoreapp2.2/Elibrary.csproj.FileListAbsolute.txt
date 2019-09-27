@@ -1,0 +1,14 @@
+C:\Users\PC\Documents\challenge1\Elibrary\bin\Debug\netcoreapp2.2\Elibrary.deps.json
+C:\Users\PC\Documents\challenge1\Elibrary\bin\Debug\netcoreapp2.2\Elibrary.runtimeconfig.json
+C:\Users\PC\Documents\challenge1\Elibrary\bin\Debug\netcoreapp2.2\Elibrary.runtimeconfig.dev.json
+C:\Users\PC\Documents\challenge1\Elibrary\bin\Debug\netcoreapp2.2\Elibrary.dll
+C:\Users\PC\Documents\challenge1\Elibrary\bin\Debug\netcoreapp2.2\Elibrary.pdb
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.csprojAssemblyReference.cache
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.csproj.CoreCompileInputs.cache
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.RazorAssemblyInfo.cache
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.RazorAssemblyInfo.cs
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.AssemblyInfoInputs.cache
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.AssemblyInfo.cs
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.RazorTargetAssemblyInfo.cache
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.dll
+C:\Users\PC\Documents\challenge1\Elibrary\obj\Debug\netcoreapp2.2\Elibrary.pdb
