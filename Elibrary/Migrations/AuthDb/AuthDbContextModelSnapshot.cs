@@ -52,8 +52,8 @@ namespace Elibrary.Migrations.AuthDb
                         new
                         {
                             Id = "2",
-                            Name = "Customer",
-                            NormalizedName = "CUSTOMER"
+                            Name = "User",
+                            NormalizedName = "USER"
                         });
                 });
 

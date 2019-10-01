@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elibrary.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20190927162926_InitialCreated")]
-    partial class InitialCreated
+    [Migration("20191001081803_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,8 +54,8 @@ namespace Elibrary.Migrations.AuthDb
                         new
                         {
                             Id = "2",
-                            Name = "Customer",
-                            NormalizedName = "CUSTOMER"
+                            Name = "User",
+                            NormalizedName = "USER"
                         });
                 });
 

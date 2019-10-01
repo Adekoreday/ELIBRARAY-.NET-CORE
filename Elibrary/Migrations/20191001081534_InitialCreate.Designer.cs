@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elibrary.Migrations
 {
     [DbContext(typeof(BooksDbContext))]
-    [Migration("20190927162809_InitialCreated")]
-    partial class InitialCreated
+    [Migration("20191001081534_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,9 +26,15 @@ namespace Elibrary.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Author");
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<int>("ISBN");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150);
 
                     b.Property<bool>("available");
 

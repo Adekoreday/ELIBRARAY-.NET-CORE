@@ -17,18 +17,26 @@ namespace Elibrary.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
         {
             _userManager = userManager;
+           _signInManager = signInManager;
             _configuration = configuration;
         }
 
         [Route("register")]
         [HttpPost]
-        public async Task<ActionResult> InsertUser([FromBody] Register model)
+        public async Task<ActionResult> CreateUser([FromBody] Register model)
         {
+               if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var validUser = await _userManager.FindByNameAsync(model.Email);
+            if(validUser == null) {
             var user = new IdentityUser
             {
                 Email = model.Email,
@@ -38,24 +46,39 @@ namespace Elibrary.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "Customer");
-            }
-            return Ok(new {
+                await _userManager.AddToRoleAsync(user, model.Type ?? "User");
+             }
+                return Ok(new {
                  message = "user created successfully",
                  Username = user.UserName });
-        }
+            }
+                return Conflict(new {
+                   error = "user already exist Log in"
+                });
+            }
+
 
         [Route("login")] // /login
         [HttpPost]
         public async Task<ActionResult> Login([FromBody] Login model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+             if (!ModelState.IsValid)
             {
-                var claim = new[] {
-                    new Claim(
-                      JwtRegisteredClaimNames.Sub, user.UserName)
+                return BadRequest(ModelState);
+            }
+           var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+            if (result.Succeeded)
+            {
+                 var user = await _userManager.FindByNameAsync(model.Username);
+                 var Roles = await _userManager.GetRolesAsync(user);
+                var claim = new List <Claim> {
+                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                 new Claim(ClaimTypes.NameIdentifier, user.Id)
+ 
                 };
+                claim.AddRange(Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
                 var signinKey = new SymmetricSecurityKey(
                   Encoding.UTF8.GetBytes(_configuration["Jwt:SigningKey"]));
 
@@ -64,6 +87,7 @@ namespace Elibrary.Controllers
                 var token = new JwtSecurityToken(
                   issuer: _configuration["Jwt:Site"],
                   audience: _configuration["Jwt:Site"],
+                  claims: claim,
                   expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
                   signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256)
                 );
