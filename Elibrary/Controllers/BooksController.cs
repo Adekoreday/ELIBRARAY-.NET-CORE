@@ -1,45 +1,100 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Elibrary.Models;
 
 namespace Elibrary.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
     {
-        // GET api/values
+        // GET: api/books
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<IEnumerable<Books>>> GetBooks()
         {
-            return new string[] { "value1", "value2" };
+            using (var context = new BooksDbContext())
+            {
+            var books = await context.Books.ToListAsync();
+             return Ok(books);
+            }
         }
 
-        // GET api/values/5
+            // GET: api/books
+        
+        // [Authorize(Roles = "User")]
+        // [HttpGet]
+        // public ActionResult<string> Users()
+        // {
+        //     // using (var context = new BooksDbContext())
+        //     // {
+        //     // // var availabeBook = context.Books.Where(o => o.available == true);
+        //     // }
+        // }
+        // GET: api/books/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public async Task<ActionResult<Books>> GetBooks(int id)
         {
-            return "value";
-        }
+            using (var context = new BooksDbContext()) {
+            var books = await context.Books.FindAsync(id);
 
-        // POST api/values
+            if (books == null)
+            {
+                return NotFound();
+            }
+            return Ok(books);
+            }
+        }
+    
+        // POST: api/books
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Books>> PostBooks([FromBody]Books books)
         {
+            using (var context = new BooksDbContext()) {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            context.Books.Add(books);
+            await context.SaveChangesAsync();
+           return Ok(books);
+        }
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
+                // DELETE api/book/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult<Books>> DeleteBooks(int id)
         {
+                using (var context = new BooksDbContext()) {
+                      var books = await context.Books.FindAsync(id);
+            if (books==null)
+            {
+                return NotFound( new {
+                    error = "book does not exist"
+                });
+            }
+
+            else
+            {
+                context.Books.Remove(books);
+                context.SaveChanges();
+                return Ok( new {
+                    message = "book deleted sucessfully"
+                });
+            }
+                }
+          
         }
+
+
+
+
     }
 }

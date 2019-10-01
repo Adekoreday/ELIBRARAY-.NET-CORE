@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Elibrary.Migrations
 {
-    public partial class InitialCreated : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +13,9 @@ namespace Elibrary.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Title = table.Column<string>(maxLength: 150, nullable: false),
                     ISBN = table.Column<int>(nullable: false),
-                    Author = table.Column<string>(nullable: true),
+                    Author = table.Column<string>(maxLength: 50, nullable: false),
                     description = table.Column<string>(nullable: true),
                     available = table.Column<bool>(nullable: false)
                 },
