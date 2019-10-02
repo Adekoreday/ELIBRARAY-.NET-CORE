@@ -26,19 +26,22 @@ namespace Elibrary.Controllers
         }
 
             // GET: api/books
-        
-        // [Authorize(Roles = "User")]
-        // [HttpGet]
-        // public ActionResult<string> Users()
-        // {
-        //     // using (var context = new BooksDbContext())
-        //     // {
-        //     // // var availabeBook = context.Books.Where(o => o.available == true);
-        //     // }
-        // }
+        [Route("[action]")]
+        [Authorize(Roles = "User")]
+        [HttpGet]
+
+        public async Task<ActionResult<Books>> Users()
+        {
+            using (var context = new BooksDbContext())
+            {
+                 var books = await context.Books.ToListAsync();
+            var availabeBook = books.Where(o => o.available == true);
+            return Ok(availabeBook);
+            }
+        }
         // GET: api/books/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Books>> GetBooks(int id)
+        public async Task<ActionResult<Books>> Get(int id)
         {
             using (var context = new BooksDbContext()) {
             var books = await context.Books.FindAsync(id);
@@ -50,11 +53,29 @@ namespace Elibrary.Controllers
             return Ok(books);
             }
         }
+
+        //PUT books (borrow books)
+       // : api/books/5
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<Books>> Borrow(int id, [FromBody] bool bookStatus)
+        {
+            using (var context = new BooksDbContext()) {
+            var books = await context.Books.FindAsync(id);
+
+            if (books == null)
+            {
+                return NotFound();
+            }
+            books.available = bookStatus;
+            await context.SaveChangesAsync();
+            return Ok(books);
+            }
+        }
     
         // POST: api/books
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult<Books>> PostBooks([FromBody]Books books)
+        public async Task<ActionResult<Books>> Post([FromBody]Books books)
         {
             using (var context = new BooksDbContext()) {
             if (!ModelState.IsValid)
@@ -67,10 +88,12 @@ namespace Elibrary.Controllers
         }
         }
 
-                // DELETE api/book/5
+
+
+        // DELETE api/book/5
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Books>> DeleteBooks(int id)
+        public async Task<ActionResult<Books>> Delete(int id)
         {
                 using (var context = new BooksDbContext()) {
                       var books = await context.Books.FindAsync(id);
@@ -92,9 +115,6 @@ namespace Elibrary.Controllers
                 }
           
         }
-
-
-
 
     }
 }
