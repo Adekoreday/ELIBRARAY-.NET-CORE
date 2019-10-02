@@ -49,9 +49,6 @@ namespace Elibrary
             .AddDefaultTokenProviders();
 
             services.AddAuthentication(options => {
-                // option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                // option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                // option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;

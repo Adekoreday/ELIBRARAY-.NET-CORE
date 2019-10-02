@@ -22,24 +22,19 @@ namespace Elibrary.Controllers
             _userManager = userManager;
         }
 
+          [Authorize(Roles = "Admin")]
         [HttpGet]
     public async Task<IActionResult> GetSearch(string user, string title)
         {
-         using (var context = new BooksDbContext()) {
-          if(title != null ){
-           var books = context.Books.Where(q => q.Title.StartsWith(title));
-           if(books != null) return Ok(books);
-              else return NotFound();  
-          }
+
           if(user != null) {
             var users = await _userManager.FindByNameAsync(user);
-            if(users != null) return Ok(user);
+            if(users != null) return Ok(users);
               else return NotFound();    
           }
           return BadRequest(new {
             error = "add a valid search param"
           });
-        }
         }
 
     }
