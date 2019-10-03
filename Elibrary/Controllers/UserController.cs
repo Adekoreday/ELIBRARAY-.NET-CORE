@@ -44,8 +44,5 @@ public async Task<IActionResult> Delete(string id)
          error = "user does not exist"
      });
 }
-
-
-
     }
 }
