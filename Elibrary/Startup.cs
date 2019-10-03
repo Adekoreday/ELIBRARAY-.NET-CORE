@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,9 +29,12 @@ namespace Elibrary
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            string connectionString = Configuration.GetConnectionString("UserDBConnection");
-            services.AddDbContext<AuthDbContext>(option => option.UseSqlServer(connectionString));
+            services.AddAutoMapper(typeof(Startup));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);      
+            string UserconnectionString = Configuration.GetConnectionString("UserDBConnection");
+            string BooksconnectionString =  Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<AuthDbContext>(option => option.UseSqlServer(UserconnectionString));
+            services.AddDbContext<BooksDbContext>(option => option.UseSqlServer(BooksconnectionString));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddIdentity<IdentityUser, IdentityRole> (
             option =>
@@ -47,7 +47,6 @@ namespace Elibrary
                     }
             ).AddEntityFrameworkStores<AuthDbContext>()
             .AddDefaultTokenProviders();
-
             services.AddAuthentication(options => {
                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -65,7 +64,6 @@ namespace Elibrary
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SigningKey"]))
                 };
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
